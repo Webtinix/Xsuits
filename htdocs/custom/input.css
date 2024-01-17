@@ -1,0 +1,14 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+@layer components{
+    .btn {
+        @apply py-2 px-3;
+    }
+    button{
+        @apply btn bg-black  text-wx;
+       
+    }
+}
