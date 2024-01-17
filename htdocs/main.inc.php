@@ -1610,6 +1610,9 @@ function top_htmlhead($head, $title = '', $disablejs = 0, $disablehead = 0, $arr
 		print '<meta name="author" content="Dolibarr Development Team">' . "\n";
 		print '<meta name="anti-csrf-newtoken" content="' . newToken() . '">' . "\n";
 		print '<meta name="anti-csrf-currenttoken" content="' . currentToken() . '">' . "\n";
+		print '<link rel="stylesheet" href="' . DOL_URL_ROOT . '/custom/css/mainXsuits.css">' . "\n";
+		print '<link rel="stylesheet" href="' . DOL_URL_ROOT . '/custom/css/tailwind.css">' . "\n";
+		print '<script src="' . DOL_URL_ROOT . '/custom/js/mainXsuits.js"></script>' . "\n";
 		if (getDolGlobalInt('MAIN_FEATURES_LEVEL')) {
 			print '<meta name="MAIN_FEATURES_LEVEL" content="' . getDolGlobalInt('MAIN_FEATURES_LEVEL') . '">' . "\n";
 		}
@@ -1980,7 +1983,7 @@ function top_htmlhead($head, $title = '', $disablejs = 0, $disablehead = 0, $arr
  */
 function top_menu($head, $title = '', $target = '', $disablejs = 0, $disablehead = 0, $arrayofjs = '', $arrayofcss = '', $morequerystring = '', $helppagename = '')
 {
-	global $user, $conf, $langs, $db, $form;
+	global $user, $conf, $langs, $db;
 	global $dolibarr_main_authentication, $dolibarr_main_demo;
 	global $hookmanager, $menumanager;
 
@@ -2013,59 +2016,8 @@ function top_menu($head, $title = '', $target = '', $disablejs = 0, $disablehead
 
 		// Show menu entries
 		print '<div id="tmenu_tooltip' . (empty($conf->global->MAIN_MENU_INVERT) ? '' : 'invert') . '" class="tmenu">' . "\n";
-		$nologo = '/public/theme/common/LVoid.png';
-		$logoxsuit = '<div style="width: 18rem; text-align: center;"><img class="logoxsuit" alt="No logo" src="' . DOL_URL_ROOT . $nologo . '"></div>';
-		print $logoxsuit;
-
-		$selected = -1;
-		if (empty($conf->global->MAIN_USE_TOP_MENU_SEARCH_DROPDOWN)) {
-			if ($conf->browser->layout == 'phone') {
-				$conf->global->MAIN_USE_OLD_SEARCH_FORM = 1;
-			}
-			$usedbyinclude = 1;
-			$arrayresult = null;
-
-			include DOL_DOCUMENT_ROOT . '/core/ajax/selectsearchbox.php'; // This make initHooks('searchform') then set $arrayresult
-
-			if ($conf->use_javascript_ajax && empty($conf->global->MAIN_USE_OLD_SEARCH_FORM)) {
-				$searchform .= $form->selectArrayFilter('searchselectcombo', $arrayresult, $selected, '', 1, 0, (empty($conf->global->MAIN_SEARCHBOX_CONTENT_LOADED_BEFORE_KEY) ? 1 : 0), 'vmenusearchselectcombo', 1, $langs->trans("Search"), 1);
-			} else {
-				if (is_array($arrayresult)) {
-					foreach ($arrayresult as $key => $val) {
-						$searchform .= printSearchForm($val['url'], $val['url'], $val['label'], 'maxwidth125', 'sall', (empty($val['shortcut']) ? '' : $val['shortcut']), 'searchleft' . $key, $val['img']);
-					}
-				}
-			}
-
-			// Execute hook printSearchForm
-			$parameters = array('searchform' => $searchform);
-			$reshook = $hookmanager->executeHooks('printSearchForm', $parameters); // Note that $action and $object may have been modified by some hooks
-			if (empty($reshook)) {
-				$searchform .= $hookmanager->resPrint;
-			} else {
-				$searchform = $hookmanager->resPrint;
-			}
-
-			// Force special value for $searchform
-			if (!empty($conf->global->MAIN_OPTIMIZEFORTEXTBROWSER) || empty($conf->use_javascript_ajax)) {
-				$urltosearch = DOL_URL_ROOT . '/core/search_page.php?showtitlebefore=1';
-				$searchform = '<div class="blockvmenuimpair blockvmenusearchphone"><div id="divsearchforms1"><a href="' . $urltosearch . '" accesskey="s" alt="' . dol_escape_htmltag($langs->trans("ShowSearchFields")) . '">' . $langs->trans("Search") . '...</a></div></div>';
-			} elseif ($conf->use_javascript_ajax && !empty($conf->global->MAIN_USE_OLD_SEARCH_FORM)) {
-				$searchform = '<div class="blockvmenuimpair blockvmenusearchphone"><div id="divsearchforms1"><a href="#" alt="' . dol_escape_htmltag($langs->trans("ShowSearchFields")) . '">' . $langs->trans("Search") . '...</a></div><div id="divsearchforms2" style="display: none">' . $searchform . '</div>';
-				$searchform .= '<script>
-		    	jQuery(document).ready(function () {
-		    		jQuery("#divsearchforms1").click(function(){
-		               jQuery("#divsearchforms2").toggle();
-		           });
-		    	});
-		        </script>' . "\n";
-				$searchform .= '</div>';
-			}
-			print $searchform;
-		}
-
-		print '<div></div>';
-		//Hannibal
+		$menumanager->atarget = $target;
+		$menumanager->showmenu('top', array('searchform' => $searchform)); // This contains a \n
 		print "</div>\n";
 
 		// Define link to login card
@@ -2103,8 +2055,93 @@ function top_menu($head, $title = '', $target = '', $disablejs = 0, $disablehead
 			}
 		}
 
-		print '<div class="login_block usedropdown">' . "\n";
+		print '<div class="flex justify-between items-center login_block usedropdown w-full bg-black text-white">' . "\n";
+		$nologo = '/theme/Xsuits/img/LVoid.png';
+		$logoxsuit = '<div class="w-72 text-center"><img class="w-12 " alt="No logo" src="' . DOL_URL_ROOT . $nologo . '"></div>';
+		print $logoxsuit;
+		print "<div>" . "\n";
 
+		if (!is_object($form)) {
+			$form = new Form($db);
+		}
+		$selected = -1;
+		if (!getDolGlobalString('MAIN_USE_TOP_MENU_SEARCH_DROPDOWN')) {
+			// Select into select2 is awfull on smartphone. TODO Is this still true with select2 v4 ?
+			if ($conf->browser->layout == 'phone') {
+				$conf->global->MAIN_USE_OLD_SEARCH_FORM = 1;
+			}
+
+			$usedbyinclude = 1;
+			$arrayresult = array();
+			include DOL_DOCUMENT_ROOT . '/core/ajax/selectsearchbox.php'; // This make initHooks('searchform') then set $arrayresult
+
+			if ($conf->use_javascript_ajax && !getDolGlobalString('MAIN_USE_OLD_SEARCH_FORM')) {
+				// accesskey is for Windows or Linux:  ALT + key for chrome, ALT + SHIFT + KEY for firefox
+				// accesskey is for Mac:               CTRL + key for all browsers
+				$stringforfirstkey = $langs->trans("KeyboardShortcut");
+				if ($conf->browser->name == 'chrome') {
+					$stringforfirstkey .= ' ALT +';
+				} elseif ($conf->browser->name == 'firefox') {
+					$stringforfirstkey .= ' ALT + SHIFT +';
+				} else {
+					$stringforfirstkey .= ' CTL +';
+				}
+
+				$searchform .= $form->selectArrayFilter('searchselectcombo', $arrayresult, $selected, 'accesskey="s"', 1, 0, (!getDolGlobalString('MAIN_SEARCHBOX_CONTENT_LOADED_BEFORE_KEY') ? 1 : 0), 'vmenusearchselectcombo', 1, $langs->trans("Search"), 1, $stringforfirstkey . ' s');
+			} else {
+				if (is_array($arrayresult)) {
+					foreach ($arrayresult as $key => $val) {
+						$searchform .= printSearchForm($val['url'], $val['url'], $val['label'], 'maxwidth125', 'search_all', (empty($val['shortcut']) ? '' : $val['shortcut']), 'searchleft' . $key, $val['img']);
+					}
+				}
+			}
+
+			// Execute hook printSearchForm
+			$parameters = array('searchform' => $searchform);
+			$reshook = $hookmanager->executeHooks('printSearchForm', $parameters); // Note that $action and $object may have been modified by some hooks
+			if (empty($reshook)) {
+				$searchform .= $hookmanager->resPrint;
+			} else {
+				$searchform = $hookmanager->resPrint;
+			}
+
+			// Force special value for $searchform for text browsers or very old search form
+			if (getDolGlobalString('MAIN_OPTIMIZEFORTEXTBROWSER') || empty($conf->use_javascript_ajax)) {
+				$urltosearch = DOL_URL_ROOT . '/core/search_page.php?showtitlebefore=1';
+				$searchform = '<div class="blockvmenuimpair blockvmenusearchphone"><div id="divsearchforms1"><a href="' . $urltosearch . '" accesskey="s" alt="' . dol_escape_htmltag($langs->trans("ShowSearchFields")) . '">' . $langs->trans("Search") . '...</a></div></div>';
+			} elseif ($conf->use_javascript_ajax && getDolGlobalString('MAIN_USE_OLD_SEARCH_FORM')) {
+				$searchform = '<div class="blockvmenuimpair blockvmenusearchphone"><div id="divsearchforms1"><a href="#" alt="' . dol_escape_htmltag($langs->trans("ShowSearchFields")) . '">' . $langs->trans("Search") . '...</a></div><div id="divsearchforms2" style="display: none">' . $searchform . '</div>';
+				$searchform .= '<script>
+					jQuery(document).ready(function () {
+						jQuery("#divsearchforms1").click(function(){
+						jQuery("#divsearchforms2").toggle();
+					});
+					});
+					</script>' . "\n";
+				$searchform .= '</div>';
+			}
+
+			// Key map shortcut
+			$searchform .= '<script>
+					jQuery(document).keydown(function(e){
+						if( e.which === 70 && e.ctrlKey && e.shiftKey ){
+							console.log(\'control + shift + f : trigger open global-search dropdown\');
+							openGlobalSearchDropDown();
+						}
+						if( (e.which === 83 || e.which === 115) && e.altKey ){
+							console.log(\'alt + s : trigger open global-search dropdown\');
+							openGlobalSearchDropDown();
+						}
+					});
+
+					var openGlobalSearchDropDown = function() {
+						jQuery("#searchselectcombo").select2(\'open\');
+					}
+				</script>';
+		}
+		print $searchform;
+		print "</div>" . "\n";
+		print '<div>' . "\n";
 		$toprightmenu .= '<div class="login_block_other">';
 
 		// Execute hook printTopRightMenu (hooks should output string like '<div class="login"><a href="">mylink</a></div>')
@@ -2241,7 +2278,7 @@ function top_menu($head, $title = '', $target = '', $disablejs = 0, $disablehead
 
 
 		print $toprightmenu;
-
+		print '<div>' . "\n";
 		print "</div>\n"; // end div class="login_block"
 
 		print '</header>';
@@ -2454,7 +2491,7 @@ function top_menu_user($hideloginname = 0, $urllogout = '')
 	    <div id="topmenu-login-dropdown" class="userimg atoplogin dropdown user user-menu inline-block">
 	    	<a href="' . DOL_URL_ROOT . '/user/card.php?id=' . $user->id . '">
 	    	' . $userImage . '
-	    		<span class="hidden-xs maxwidth200 atoploginusername hideonsmartphone">' . dol_trunc($user->firstname ? $user->firstname : $user->login, 10) . '</span>
+	    		<span class="hidden hidden-xs maxwidth200 atoploginusername hideonsmartphone">' . dol_trunc($user->firstname ? $user->firstname : $user->login, 10) . '</span>
 	    		</a>
 		</div>';
 	}
@@ -2978,52 +3015,51 @@ function left_menu($menu_array_before, $helppagename = '', $notused = '', $menu_
 			$form = new Form($db);
 		}
 		$selected = -1;
-		// if (empty($conf->global->MAIN_USE_TOP_MENU_SEARCH_DROPDOWN)) {
-		// 	// Select into select2 is awfull on smartphone. TODO Is this still true with select2 v4 ?
+		if (empty($conf->global->MAIN_USE_TOP_MENU_SEARCH_DROPDOWN)) {
+			// Select into select2 is awfull on smartphone. TODO Is this still true with select2 v4 ?
+			if ($conf->browser->layout == 'phone') {
+				$conf->global->MAIN_USE_OLD_SEARCH_FORM = 1;
+			}
 
-		// 	if ($conf->browser->layout == 'phone') {
-		// 		$conf->global->MAIN_USE_OLD_SEARCH_FORM = 1;
-		// 	}
+			$usedbyinclude = 1;
+			$arrayresult = null;
+			include DOL_DOCUMENT_ROOT . '/core/ajax/selectsearchbox.php'; // This make initHooks('searchform') then set $arrayresult
 
-		// 	$usedbyinclude = 1;
-		// 	$arrayresult = null;
-		// 	include DOL_DOCUMENT_ROOT . '/core/ajax/selectsearchbox.php'; // This make initHooks('searchform') then set $arrayresult
+			if ($conf->use_javascript_ajax && empty($conf->global->MAIN_USE_OLD_SEARCH_FORM)) {
+				$searchform .= $form->selectArrayFilter('searchselectcombo', $arrayresult, $selected, '', 1, 0, (empty($conf->global->MAIN_SEARCHBOX_CONTENT_LOADED_BEFORE_KEY) ? 1 : 0), 'vmenusearchselectcombo', 1, $langs->trans("Search"), 1);
+			} else {
+				if (is_array($arrayresult)) {
+					foreach ($arrayresult as $key => $val) {
+						$searchform .= printSearchForm($val['url'], $val['url'], $val['label'], 'maxwidth125', 'sall', (empty($val['shortcut']) ? '' : $val['shortcut']), 'searchleft' . $key, $val['img']);
+					}
+				}
+			}
 
-		// 	if ($conf->use_javascript_ajax && empty($conf->global->MAIN_USE_OLD_SEARCH_FORM)) {
-		// 		$searchform .= $form->selectArrayFilter('searchselectcombo', $arrayresult, $selected, '', 1, 0, (empty($conf->global->MAIN_SEARCHBOX_CONTENT_LOADED_BEFORE_KEY) ? 1 : 0), 'vmenusearchselectcombo', 1, $langs->trans("Search"), 1);
-		// 	} else {
-		// 		if (is_array($arrayresult)) {
-		// 			foreach ($arrayresult as $key => $val) {
-		// 				$searchform .= printSearchForm($val['url'], $val['url'], $val['label'], 'maxwidth125', 'sall', (empty($val['shortcut']) ? '' : $val['shortcut']), 'searchleft' . $key, $val['img']);
-		// 			}
-		// 		}
-		// 	}
+			// Execute hook printSearchForm
+			$parameters = array('searchform' => $searchform);
+			$reshook = $hookmanager->executeHooks('printSearchForm', $parameters); // Note that $action and $object may have been modified by some hooks
+			if (empty($reshook)) {
+				$searchform .= $hookmanager->resPrint;
+			} else {
+				$searchform = $hookmanager->resPrint;
+			}
 
-		// 	// Execute hook printSearchForm
-		// 	$parameters = array('searchform' => $searchform);
-		// 	$reshook = $hookmanager->executeHooks('printSearchForm', $parameters); // Note that $action and $object may have been modified by some hooks
-		// 	if (empty($reshook)) {
-		// 		$searchform .= $hookmanager->resPrint;
-		// 	} else {
-		// 		$searchform = $hookmanager->resPrint;
-		// 	}
-
-		// 	// Force special value for $searchform
-		// 	if (!empty($conf->global->MAIN_OPTIMIZEFORTEXTBROWSER) || empty($conf->use_javascript_ajax)) {
-		// 		$urltosearch = DOL_URL_ROOT . '/core/search_page.php?showtitlebefore=1';
-		// 		$searchform = '<div class="blockvmenuimpair blockvmenusearchphone"><div id="divsearchforms1"><a href="' . $urltosearch . '" accesskey="s" alt="' . dol_escape_htmltag($langs->trans("ShowSearchFields")) . '">' . $langs->trans("Search") . '...</a></div></div>';
-		// 	} elseif ($conf->use_javascript_ajax && !empty($conf->global->MAIN_USE_OLD_SEARCH_FORM)) {
-		// 		$searchform = '<div class="blockvmenuimpair blockvmenusearchphone"><div id="divsearchforms1"><a href="#" alt="' . dol_escape_htmltag($langs->trans("ShowSearchFields")) . '">' . $langs->trans("Search") . '...</a></div><div id="divsearchforms2" style="display: none">' . $searchform . '</div>';
-		// 		$searchform .= '<script>
-		//     	jQuery(document).ready(function () {
-		//     		jQuery("#divsearchforms1").click(function(){
-		//                jQuery("#divsearchforms2").toggle();
-		//            });
-		//     	});
-		//         </script>' . "\n";
-		// 		$searchform .= '</div>';
-		// 	}
-		// }
+			// Force special value for $searchform
+			if (!empty($conf->global->MAIN_OPTIMIZEFORTEXTBROWSER) || empty($conf->use_javascript_ajax)) {
+				$urltosearch = DOL_URL_ROOT . '/core/search_page.php?showtitlebefore=1';
+				$searchform = '<div class="blockvmenuimpair blockvmenusearchphone"><div id="divsearchforms1"><a href="' . $urltosearch . '" accesskey="s" alt="' . dol_escape_htmltag($langs->trans("ShowSearchFields")) . '">' . $langs->trans("Search") . '...</a></div></div>';
+			} elseif ($conf->use_javascript_ajax && !empty($conf->global->MAIN_USE_OLD_SEARCH_FORM)) {
+				$searchform = '<div class="blockvmenuimpair blockvmenusearchphone"><div id="divsearchforms1"><a href="#" alt="' . dol_escape_htmltag($langs->trans("ShowSearchFields")) . '">' . $langs->trans("Search") . '...</a></div><div id="divsearchforms2" style="display: none">' . $searchform . '</div>';
+				$searchform .= '<script>
+            	jQuery(document).ready(function () {
+            		jQuery("#divsearchforms1").click(function(){
+	                   jQuery("#divsearchforms2").toggle();
+	               });
+            	});
+                </script>' . "\n";
+				$searchform .= '</div>';
+			}
+		}
 
 		// Left column
 		print '<!-- Begin left menu -->' . "\n";
@@ -3184,7 +3220,7 @@ function main_area($title = '')
 	global $conf, $langs, $hookmanager;
 
 	if (empty($conf->dol_hide_leftmenu)) {
-		print '<div id="id-right">';
+		print '<div id="id-right" class="pt-14">';
 	}
 
 	print "\n";
