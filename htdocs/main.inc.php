@@ -3484,27 +3484,27 @@ if (!function_exists("llxFooter")) {
 			if (in_array($object->element, array('facture'))) {       // Restrict for the moment to element 'facture'
 				print "\n<!-- JS CODE TO ENABLE log when making a download or a preview of a document -->\n";
 ?>
-<script>
-jQuery(document).ready(function() {
-    $('a.documentpreview').click(function() {
-        $.post('<?php echo DOL_URL_ROOT . "/blockedlog/ajax/block-add.php" ?>', {
-            id: <?php echo $object->id; ?>,
-            element: '<?php echo $object->element ?>',
-            action: 'DOC_PREVIEW',
-            token: '<?php echo currentToken(); ?>'
-        });
-    });
-    $('a.documentdownload').click(function() {
-        $.post('<?php echo DOL_URL_ROOT . "/blockedlog/ajax/block-add.php" ?>', {
-            id: <?php echo $object->id; ?>,
-            element: '<?php echo $object->element ?>',
-            action: 'DOC_DOWNLOAD',
-            token: '<?php echo currentToken(); ?>'
-        });
-    });
-});
-</script>
-<?php
+				<script>
+					jQuery(document).ready(function() {
+						$('a.documentpreview').click(function() {
+							$.post('<?php echo DOL_URL_ROOT . "/blockedlog/ajax/block-add.php" ?>', {
+								id: <?php echo $object->id; ?>,
+								element: '<?php echo $object->element ?>',
+								action: 'DOC_PREVIEW',
+								token: '<?php echo currentToken(); ?>'
+							});
+						});
+						$('a.documentdownload').click(function() {
+							$.post('<?php echo DOL_URL_ROOT . "/blockedlog/ajax/block-add.php" ?>', {
+								id: <?php echo $object->id; ?>,
+								element: '<?php echo $object->element ?>',
+								action: 'DOC_DOWNLOAD',
+								token: '<?php echo currentToken(); ?>'
+							});
+						});
+					});
+				</script>
+				<?php
 			}
 		}
 
@@ -3547,61 +3547,61 @@ jQuery(document).ready(function() {
 							$distrib = $dolibarr_distrib;
 						}
 				?>
-<script>
-jQuery(document).ready(function(tmp) {
-    console.log("Try Ping with hash_unique_id is md5('dolibarr'+instance_unique_id)");
-    $.ajax({
-        method: "POST",
-        url: "<?php echo $url_for_ping ?>",
-        timeout: 500, // timeout milliseconds
-        cache: false,
-        data: {
-            hash_algo: 'md5',
-            hash_unique_id: '<?php echo dol_escape_js($hash_unique_id); ?>',
-            action: 'dolibarrping',
-            version: '<?php echo (float) DOL_VERSION; ?>',
-            entity: '<?php echo (int) $conf->entity; ?>',
-            dbtype: '<?php echo dol_escape_js($db->type); ?>',
-            country_code: '<?php echo $mysoc->country_code ? dol_escape_js($mysoc->country_code) : 'unknown'; ?>',
-            php_version: '<?php echo dol_escape_js(phpversion()); ?>',
-            os_version: '<?php echo dol_escape_js(version_os('smr')); ?>',
-            distrib: '<?php echo $distrib ? dol_escape_js($distrib) : 'unknown'; ?>',
-            token: 'notrequired'
-        },
-        success: function(data, status,
-            xhr) { // success callback function (data contains body of response)
-            console.log("Ping ok");
-            $.ajax({
-                method: 'GET',
-                url: '<?php echo DOL_URL_ROOT . '/core/ajax/pingresult.php'; ?>',
-                timeout: 500, // timeout milliseconds
-                cache: false,
-                data: {
-                    hash_algo: 'md5',
-                    hash_unique_id: '<?php echo dol_escape_js($hash_unique_id); ?>',
-                    action: 'firstpingok',
-                    token: '<?php echo currentToken(); ?>'
-                }, // for update
-            });
-        },
-        error: function(data, status, xhr) { // error callback function
-            console.log("Ping ko: " + data);
-            $.ajax({
-                method: 'GET',
-                url: '<?php echo DOL_URL_ROOT . '/core/ajax/pingresult.php'; ?>',
-                timeout: 500, // timeout milliseconds
-                cache: false,
-                data: {
-                    hash_algo: 'md5',
-                    hash_unique_id: '<?php echo dol_escape_js($hash_unique_id); ?>',
-                    action: 'firstpingko',
-                    token: '<?php echo currentToken(); ?>'
-                },
-            });
-        }
-    });
-});
-</script>
+						<script>
+							jQuery(document).ready(function(tmp) {
+								console.log("Try Ping with hash_unique_id is md5('dolibarr'+instance_unique_id)");
+								$.ajax({
+									method: "POST",
+									url: "<?php echo $url_for_ping ?>",
+									timeout: 500, // timeout milliseconds
+									cache: false,
+									data: {
+										hash_algo: 'md5',
+										hash_unique_id: '<?php echo dol_escape_js($hash_unique_id); ?>',
+										action: 'dolibarrping',
+										version: '<?php echo (float) DOL_VERSION; ?>',
+										entity: '<?php echo (int) $conf->entity; ?>',
+										dbtype: '<?php echo dol_escape_js($db->type); ?>',
+										country_code: '<?php echo $mysoc->country_code ? dol_escape_js($mysoc->country_code) : 'unknown'; ?>',
+										php_version: '<?php echo dol_escape_js(phpversion()); ?>',
+										os_version: '<?php echo dol_escape_js(version_os('smr')); ?>',
+										distrib: '<?php echo $distrib ? dol_escape_js($distrib) : 'unknown'; ?>',
+										token: 'notrequired'
+									},
+									success: function(data, status,
+										xhr) { // success callback function (data contains body of response)
+										console.log("Ping ok");
+										$.ajax({
+											method: 'GET',
+											url: '<?php echo DOL_URL_ROOT . '/core/ajax/pingresult.php'; ?>',
+											timeout: 500, // timeout milliseconds
+											cache: false,
+											data: {
+												hash_algo: 'md5',
+												hash_unique_id: '<?php echo dol_escape_js($hash_unique_id); ?>',
+												action: 'firstpingok',
+												token: '<?php echo currentToken(); ?>'
+											}, // for update
+										});
+									},
+									error: function(data, status, xhr) { // error callback function
+										console.log("Ping ko: " + data);
+										$.ajax({
+											method: 'GET',
+											url: '<?php echo DOL_URL_ROOT . '/core/ajax/pingresult.php'; ?>',
+											timeout: 500, // timeout milliseconds
+											cache: false,
+											data: {
+												hash_algo: 'md5',
+												hash_unique_id: '<?php echo dol_escape_js($hash_unique_id); ?>',
+												action: 'firstpingko',
+												token: '<?php echo currentToken(); ?>'
+											},
+										});
+									}
+								});
+							});
+						</script>
 <?php
 					}
 				} else {
