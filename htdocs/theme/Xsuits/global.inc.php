@@ -4475,7 +4475,7 @@ div.login a:hover {
 }
 
 div.login_block_user {
-    display: inline-block;
+    /* display: inline-block; */
     vertical-align: middle;
     /* line-height: <?php echo $disableimages ? '25' : '52';
                         ?>px; */
@@ -4675,8 +4675,9 @@ input.vmenusearchselectcombo[type=text] {
 }
 
 .vmenusearchselectcombo {
-    width: <?php echo $leftmenuwidth - 2;
-    ?>px;
+    /* width: <?php echo $leftmenuwidth - 2;
+    ?>px; */
+    width: 29rem;
 }
 
 .menu_contenu {

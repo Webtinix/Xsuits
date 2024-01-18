@@ -603,7 +603,7 @@ function print_start_menu_array()
 {
 	global $conf;
 
-	print '<div class="tmenudiv flex fixed rleft-0 justify-start">';
+	print '<div class="tmenudiv flex fixed left-0 justify-start">';
 	print '<ul role="navigation" class="tmenu flex flex-col w-56"' . (empty($conf->global->MAIN_OPTIMIZEFORTEXTBROWSER) ? '' : ' title="Top menu"') . '>';
 }
 

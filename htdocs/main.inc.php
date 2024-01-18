@@ -2057,7 +2057,7 @@ function top_menu($head, $title = '', $target = '', $disablejs = 0, $disablehead
 
 		print '<div class="flex justify-between items-center login_block usedropdown w-full bg-black text-white">' . "\n";
 		$nologo = '/theme/Xsuits/img/LVoid.png';
-		$logoxsuit = '<div class="w-72 text-center"><img class="w-12 " alt="No logo" src="' . DOL_URL_ROOT . $nologo . '"></div>';
+		$logoxsuit = '<div class="w-72 text-center"><img class="w-12 ml-16" alt="No logo" src="' . DOL_URL_ROOT . $nologo . '"></div>';
 		print $logoxsuit;
 		print "<div>" . "\n";
 
@@ -2087,7 +2087,7 @@ function top_menu($head, $title = '', $target = '', $disablejs = 0, $disablehead
 					$stringforfirstkey .= ' CTL +';
 				}
 
-				$searchform .= $form->selectArrayFilter('searchselectcombo', $arrayresult, $selected, 'accesskey="s"', 1, 0, (!getDolGlobalString('MAIN_SEARCHBOX_CONTENT_LOADED_BEFORE_KEY') ? 1 : 0), 'vmenusearchselectcombo', 1, $langs->trans("Search"), 1, $stringforfirstkey . ' s');
+				$searchform .= $form->selectArrayFilter('searchselectcombo', $arrayresult, $selected, 'accesskey="s"', 1, 0, (!getDolGlobalString('MAIN_SEARCHBOX_CONTENT_LOADED_BEFORE_KEY') ? 1 : 0), 'vmenusearchselectcombo oo', 1, $langs->trans("Search"), 1, $stringforfirstkey . ' s');
 			} else {
 				if (is_array($arrayresult)) {
 					foreach ($arrayresult as $key => $val) {
@@ -2141,7 +2141,7 @@ function top_menu($head, $title = '', $target = '', $disablejs = 0, $disablehead
 		}
 		print $searchform;
 		print "</div>" . "\n";
-		print '<div>' . "\n";
+		print '<div class="flex items-center">' . "\n";
 		$toprightmenu .= '<div class="login_block_other">';
 
 		// Execute hook printTopRightMenu (hooks should output string like '<div class="login"><a href="">mylink</a></div>')
@@ -2250,7 +2250,7 @@ function top_menu($head, $title = '', $target = '', $disablejs = 0, $disablehead
 
 
 		// Add login user link
-		$toprightmenu .= '<div class="login_block_user">';
+		$toprightmenu .= '<div class="flex items-center login_block_user">';
 
 		// Login name with photo and tooltip
 		$mode = -1;

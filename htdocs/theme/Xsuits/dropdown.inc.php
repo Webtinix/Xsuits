@@ -146,28 +146,28 @@ div#topmenu-bookmark-dropdown a::after {
 
 
 /* .dropdown-toggle::after {
-	font-family: "<?php echo getDolGlobalString('MAIN_FONTAWESOME_FAMILY', 'Font Awesome 5 Free'); ?>";
-	font-size: 0.7em;
-	font-weight: 900;
-	font-style: normal;
-	font-variant: normal;
-	text-rendering: auto;
-	-webkit-font-smoothing: antialiased;
-	text-align:center;
-	text-decoration:none;
-	margin:  auto 3px;
-	display: inline-block;
-	content: "\f078";
+    font-family: "<?php echo getDolGlobalString('MAIN_FONTAWESOME_FAMILY', 'Font Awesome 5 Free'); ?>";
+    font-size: 0.7em;
+    font-weight: 900;
+    font-style: normal;
+    font-variant: normal;
+    text-rendering: auto;
+    -webkit-font-smoothing: antialiased;
+    text-align: center;
+    text-decoration: none;
+    margin: auto 3px;
+    display: inline-block;
+    content: "\f078";
 
-	-webkit-transition: -webkit-transform .2s ease-in-out;
-	-ms-transition: -ms-transform .2s ease-in-out;
-	transition: transform .2s ease-in-out;
+    -webkit-transition: -webkit-transform .2s ease-in-out;
+    -ms-transition: -ms-transform .2s ease-in-out;
+    transition: transform .2s ease-in-out;
 } */
 
 
-/* .open>.dropdown-toggle::after {
+.open>.dropdown-toggle::after {
     transform: rotate(180deg);
-} */
+}
 
 /*
 * MENU Dropdown

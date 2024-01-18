@@ -1,16 +1,15 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ["index.html"],
+  content: ["xsuits-main/htdocs/main.in.php"],
   theme: {
     extend: {
-      colors :{
+      colors: {
         wx: "orange"
       },
-      borderRadius:{
-        wx:"20px"
+      borderRadius: {
+        wx: "20px"
       }
     },
   },
   plugins: [],
 }
-
