@@ -77,13 +77,13 @@ if (empty($conf->dol_no_mouse_hover)) {
     		console.log("Return title for popup");
             return $(this).prop("title");		/* To force to get title as is */
    		}
-	});'."\n";
+	});' . "\n";
 }
 
 print '
 jQuery(".classfortooltiponclicktext").dialog({
     closeOnEscape: true, classes: { "ui-dialog": "highlight" },
-    maxHeight: window.innerHeight-60, width: '.($conf->browser->layout == 'phone' ? max($_SESSION['dol_screenwidth'] - 20, 320) : 700).',
+    maxHeight: window.innerHeight-60, width: ' . ($conf->browser->layout == 'phone' ? max($_SESSION['dol_screenwidth'] - 20, 320) : 700) . ',
     modal: true,
     autoOpen: false
     }).css("z-index: 5000");
@@ -94,7 +94,7 @@ jQuery(".classfortooltiponclick").click(function () {
         obj.dialog("open");
         return false;
     }
-});'."\n";
+});' . "\n";
 
 print "});\n";
 
@@ -174,10 +174,10 @@ if ($conf->browser->layout != 'phone') {
 	print '		jQuery(document).ready(function () {
 			        jQuery(".documentpreview").click(function () {
             		    console.log("We click on preview for element with href="+$(this).attr(\'href\')+" mime="+$(this).attr(\'mime\'));
-            		    document_preview($(this).attr(\'href\'), $(this).attr(\'mime\'), \''.dol_escape_js($langs->transnoentities("Preview")).'\');
+            		    document_preview($(this).attr(\'href\'), $(this).attr(\'mime\'), \'' . dol_escape_js($langs->transnoentities("Preview")) . '\');
                 		return false;
         			});
-		});'."\n";
+		});' . "\n";
 }
 
 // Code to manage reposition
@@ -214,7 +214,7 @@ print '
 						}
 					}
 				});
-	});'."\n";
+	});' . "\n";
 
 // Code to manage Copy To Clipboard click
 print "\n/* JS CODE TO ENABLE ClipBoard copy paste */\n";
@@ -270,13 +270,13 @@ print '
 					var lastchild = this.parentNode.lastChild;		/* .parentNode is clipboardCP and last child is clipboardCPText */
 					var tmp = lastchild.innerHTML
 					if (succeed) {
-						lastchild.innerHTML = \'<div class="clipboardCPTextDivInside opacitymedium">'.dol_escape_js($langs->trans('CopiedToClipboard')).'</div>\';
+						lastchild.innerHTML = \'<div class="clipboardCPTextDivInside opacitymedium">' . dol_escape_js($langs->trans('CopiedToClipboard')) . '</div>\';
 					} else {
-						lastchild.innerHTML = \'<div class="clipboardCPTextDivInside opacitymedium">'.dol_escape_js($langs->trans('Error')).'</div>\';
+						lastchild.innerHTML = \'<div class="clipboardCPTextDivInside opacitymedium">' . dol_escape_js($langs->trans('Error')) . '</div>\';
 					}
 					setTimeout(() => { lastchild.innerHTML = tmp; }, 1000);
 				});
-	});'."\n";
+	});' . "\n";
 
 // Code to manage clicktodial
 print "\n/* JS CODE TO ENABLE clicktodial call of an URL */\n";
@@ -288,7 +288,7 @@ print '
 			$.ajax({
 			  url: this.href,
 			  type: \'GET\',
-			  data: { token: \''.newToken().'\' }
+			  data: { token: \'' . newToken() . '\' }
 			}).done(function(xhr, textStatus, errorThrown) {
 			    /* do nothing */
 			}).fail(function(xhr, textStatus, errorThrown) {
@@ -296,7 +296,7 @@ print '
 			});
 			return false;
 		});
-	});'."\n";
+	});' . "\n";
 
 
 // Code to manage the confirm dialog box
@@ -357,4 +357,4 @@ print '
 			});
 		});
 	});
-'."\n";
+' . "\n";
