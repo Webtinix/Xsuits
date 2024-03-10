@@ -2050,9 +2050,15 @@ function top_menu($head, $title = '', $target = '', $disablejs = 0, $disablehead
 				.bordercartbt {
 					border-bottom-left-radius: 2rem;
 				}
+				.fichehalfleftw {
+					width: 36rem;
+				}
+				.fichecenter i:before {
+					color: #fff!important;
+				}
 				@layer base {
 					ul.tmenu {
-						@apply fixed top-12 left-0 backgroundultmenu flex flex-col justify-start w-2/12 h-full !important;
+						@apply fixed top-12 left-0 backgroundultmenu flex flex-col overflow-auto justify-start w-2/12 h-full !important;
 					}
 				}
 				@layer components {
@@ -2137,7 +2143,7 @@ function top_menu($head, $title = '', $target = '', $disablejs = 0, $disablehead
 						@apply tmenuselcolor !important;
 					}
 					.tmenulabel.tmenusel {
-						@apply pl-2 !important;
+						@apply pl-2 w-full text-left !important;
 					}
 					.tmenulabel.tmenusel .mainmenuaspan {
 						@apply font-medium !important;
@@ -2151,9 +2157,6 @@ function top_menu($head, $title = '', $target = '', $disablejs = 0, $disablehead
 					.tdoverflowmax150.maxwidth150onsmartphone .classfortooltip {
 						@apply flex space-x-4 !important;
 					}
-					.box-flex-item .box-flex-item-with-margin {
-						@apply border-r-4 border-indigo-500;
-					}
 					.info-box-icon {
 						@apply bordercartbt bordercarttr !important;
 					}
@@ -2162,6 +2165,9 @@ function top_menu($head, $title = '', $target = '', $disablejs = 0, $disablehead
 					}
 					div.blockvmenupair, div.blockvmenuimpair, div.blockvmenubookmarks, div.blockvmenuend {
 						@apply bg-transparent !important;
+					}
+					div.fichehalfleft {
+						@apply fichehalfleftw !important;
 					}
 				}
 			</style>

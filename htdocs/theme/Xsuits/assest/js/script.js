@@ -56,3 +56,19 @@ let submenu = (submenu) => {
 }
 
 submenu(document.querySelectorAll('.tmenusel a'));
+
+let colorcard = (elementcard) => {
+    let elements = elementcard;
+
+    var colors = ['#005ac8', '#231f20', '#005ac8', '#ff5000', '#005ac8', '#ff5000', '#231f20', '#ff5000', '#005ac8', '#005ac8', '#231f20', '#005ac8'];
+
+    for (var i = 0; i < elements.length; i++) {
+
+        // elements[i].style.background = colors[i % colors.length];
+        elements[i].style.setProperty('background-color', colors[i % colors.length], 'important');
+        elements[i].parentNode.parentNode.style.setProperty('border-right-width', '4px');
+        elements[i].parentNode.parentNode.style.setProperty('border-color', colors[i % colors.length]);
+    }
+}
+
+colorcard(document.getElementsByClassName('info-box-icon'));
